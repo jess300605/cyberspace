@@ -20,3 +20,42 @@ button { cursor: pointer; }
 @media (max-width: 800px) { .sidebar { position: fixed; z-index: 20; top: 0; left: 0; transform: translateX(-100%); transition: transform .25s ease; box-shadow: 20px 0 50px rgba(0,0,0,.4); }.sidebar.open { transform: translateX(0); }.mobile-close { display: block; }.topbar { height: 64px; padding: 0 18px; }.menu-button { display: block; }.breadcrumb span, .breadcrumb svg { display: none; }.top-actions { margin-left: auto; }.search-box { width: 145px; }.secure-badge { display: none; }.main-content { padding: 38px 18px; }.content-width { width: 100%; } }
 @media (max-width: 480px) { .search-box { width: 120px; }.topbar { gap: 8px; }.metric-card { padding: 15px; }.metric-card span { font-size: 22px; }.main-content { padding-top: 30px; } }
 @layer base { * { border-color: rgba(255,255,255,.1); outline-color: rgba(92,227,238,.5); } }
+
+/* Editorial learning workspace: stronger hierarchy, quieter surfaces, clearer affordances. */
+body { font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #07101d; }
+.cyber-shell { background: linear-gradient(135deg, #07101d 0%, #0b1728 48%, #091322 100%); }
+.sidebar { width: 286px; padding: 24px 18px 20px; background: rgba(5, 13, 25, .88); border-right-color: rgba(157, 190, 215, .12); }
+.brand { padding: 4px 10px 34px; }
+.brand-mark { width: 42px; height: 42px; border-radius: 12px; background: linear-gradient(145deg, rgba(56, 211, 230, .2), rgba(56, 211, 230, .03)); box-shadow: 0 0 30px rgba(56, 211, 230, .08); }
+.brand-name { font-size: 14px; letter-spacing: .18em; }
+.brand-sub { color: #8293aa; }
+.sidebar-label { color: #7d91aa; font-size: 10px; letter-spacing: .2em; }
+.module-nav { gap: 4px; }
+.module-link { min-height: 42px; padding: 10px 12px; color: #8b9db3; border: 1px solid transparent; }
+.module-link:hover { background: rgba(130, 170, 200, .07); border-color: rgba(130, 170, 200, .08); }
+.module-link.active { color: #e8fcff; background: linear-gradient(90deg, rgba(61, 204, 224, .16), rgba(61, 204, 224, .04)); border-color: rgba(61, 204, 224, .16); box-shadow: inset 3px 0 #55dbe9, 0 8px 24px rgba(0,0,0,.12); }
+.module-link b { color: #587087; }
+.content-area { background: radial-gradient(circle at 78% 0%, rgba(27, 102, 126, .12), transparent 30%); }
+.topbar { height: 78px; padding: 0 52px; border-bottom-color: rgba(157, 190, 215, .12); background: rgba(7, 16, 29, .7); }
+.breadcrumb { font-size: 12px; color: #71869f; }
+.breadcrumb strong { color: #d9e7f4; }
+.search-box { width: 248px; padding: 10px 12px; border-radius: 10px; background: rgba(255,255,255,.035); border-color: rgba(157,190,215,.16); }
+.secure-badge { padding: 7px 10px; border: 1px solid rgba(67, 211, 155, .18); border-radius: 999px; background: rgba(67, 211, 155, .06); }
+.main-content { padding: 68px 52px 56px; }
+.content-width { max-width: 1080px; }
+.eyebrow { color: #67d8e7; letter-spacing: .2em; }
+.main-content h1 { max-width: 850px; font-size: clamp(2.3rem, 4vw, 4rem); line-height: 1.06; letter-spacing: -.045em; }
+.metric-card { padding: 22px; border-radius: 16px; background: linear-gradient(145deg, rgba(24, 46, 70, .7), rgba(12, 26, 44, .55)); border-color: rgba(157,190,215,.14); }
+.metric-card span { font-size: 30px; letter-spacing: -.03em; }
+.tool-card { min-height: 154px; padding: 23px; border-radius: 17px; background: linear-gradient(145deg, rgba(22, 42, 65, .78), rgba(12, 25, 43, .62)); border-color: rgba(157,190,215,.14); box-shadow: 0 14px 35px rgba(0,0,0,.12); }
+.tool-card:hover { border-color: rgba(83,216,229,.48); transform: translateY(-3px); box-shadow: 0 18px 42px rgba(0,0,0,.22); }
+.tool-icon { width: 44px; height: 44px; border-radius: 13px; }
+.lab-panel, .info-block, .lesson-step { box-shadow: 0 18px 45px rgba(0,0,0,.15); }
+.lab-panel { border-radius: 18px; border-color: rgba(103,216,231,.22); background: linear-gradient(145deg, rgba(13, 31, 51, .95), rgba(7, 17, 31, .9)); }
+.info-block { border-color: rgba(157,190,215,.14); background: rgba(16, 34, 54, .68); }
+.lesson-step { border-color: rgba(157,190,215,.13); background: rgba(16, 34, 54, .55); }
+.field-label { color: #b7c8d8; font-size: 12px; font-weight: 600; letter-spacing: .02em; }
+.lab-input { margin-top: 8px; border-radius: 10px; border-color: rgba(157,190,215,.18); background: rgba(4, 12, 23, .7); color: #e5f5ff; }
+.primary-button { border-radius: 10px; box-shadow: 0 8px 22px rgba(55, 201, 221, .16); }
+.copy-button { border-radius: 7px; }
+@media (max-width: 800px) { .topbar { padding: 0 20px; } .main-content { padding: 44px 20px; } }
