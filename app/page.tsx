@@ -49,8 +49,8 @@ const toolCards = [
 
 const commands = {
   nmap: ['nmap -sn {objetivo}', 'nmap -Pn {objetivo}', 'nmap -PR {objetivo}', 'sudo nmap -sS {objetivo}', 'nmap -sT {objetivo}', 'sudo nmap -sU {objetivo}', 'nmap -sN {objetivo}', 'nmap -sF {objetivo}', 'nmap -sX {objetivo}', 'nmap -p {puertos} {objetivo}', 'nmap -p- {objetivo}', 'nmap --top-ports 100 {objetivo}', 'nmap -sV {objetivo}', 'sudo nmap -O {objetivo}', 'sudo nmap -A {objetivo}', 'nmap -sC {objetivo}', 'nmap --script vuln {objetivo}', 'nmap --script smb-vuln-ms17-010 -p445 {objetivo}', 'nmap --script ftp-anon -p21 {objetivo}', 'nmap -oA informe {objetivo}', 'nmap -T4 {objetivo}'],
-  wifi: ['airmon-ng start {interfaz}', 'airodump-ng {interfaz_monitor}', 'wireshark {captura}.cap'],
-  traffic: ['tshark -D', 'tshark -r {captura}.pcapng -Y "{filtro}"', 'tshark -i3 -w captura.pcapng', 'tshark -i3 -a files:6 -b duration:30 -w cap.pcapng', 'tshark -qz io,phs', 'tshark -qz hosts', 'tshark -qz expert,warns', 'dumpcap -D', 'dumpcap -c {paquetes} -w captura.pcapng'],
+  wifi: ['airmon-ng check kill', 'airmon-ng start {interfaz}', 'iw dev', 'iwconfig', 'airodump-ng {interfaz_monitor}', 'airodump-ng --bssid {BSSID} --channel {canal} --write {captura} {interfaz_monitor}', 'aireplay-ng --deauth 0 -a {BSSID} {interfaz_monitor}', 'aircrack-ng {captura}-01.cap', 'aircrack-ng -w wordlist.txt {captura}-01.cap', 'airmon-ng stop {interfaz_monitor}', 'systemctl restart NetworkManager', 'wireshark {captura}.cap'],
+  traffic: ['tshark -D', 'tshark -r {captura}.pcapng -Y "{filtro}"', 'tshark -i3 -w captura.pcapng', 'tshark -i3 -f "tcp port 80" -w web.pcapng', 'tshark -i3 -a duration:60 -w sesion.pcapng', 'tshark -i3 -a files:6 -b duration:30 -w cap.pcapng', 'tshark -qz io,phs', 'tshark -qz hosts', 'tshark -qz conv,tcp', 'tshark -qz expert,warns', 'tshark -r {captura}.pcapng -T fields -e ip.src -e ip.dst -e tcp.dstport', 'tshark -r {captura}.pcapng -Y "dns" -T fields -e dns.qry.name', 'dumpcap -D', 'dumpcap -i3 -c {paquetes} -w captura.pcapng'],
 }
 
 const commandSections: Record<string, [string, string][]> = {
@@ -138,6 +138,17 @@ function Overview({ onOpen }: { onOpen: (id: string) => void }) {
   </>
 }
 
+function TryHackMeFlow() {
+  const steps = [
+    ['01', 'Define room and scope', 'Selecciona una sala oficial y trabaja solo con la IP privada entregada por la VPN.'],
+    ['02', 'Connect and verify', 'Conecta la VPN, confirma tu interfaz y valida conectividad sin tocar objetivos externos.'],
+    ['03', 'Enumerate gently', 'Empieza con ping, puertos comunes y detección de versiones; documenta cada comando.'],
+    ['04', 'Validate the lesson', 'Usa únicamente las técnicas indicadas por la sala y detente cuando obtengas la evidencia solicitada.'],
+    ['05', 'Report and reset', 'Guarda capturas, hallazgos y mitigaciones; desconecta la VPN y elimina credenciales temporales.'],
+  ]
+  return <div className="mt-8 space-y-5"><div className="rounded-2xl border border-cyan-400/20 bg-cyan-400/5 p-5"><div className="flex items-start gap-4"><BookOpen className="mt-1 size-5 text-cyan-300" /><div><h3 className="font-semibold text-white">Flujo seguro para TryHackMe</h3><p className="mt-2 text-sm leading-6 text-slate-400">Este recorrido conecta cada comando con una práctica de aprendizaje. La plataforma proporciona el objetivo y la autorización; no reutilices estas técnicas fuera de la sala.</p></div></div></div><div className="grid gap-3 md:grid-cols-5">{steps.map(([number, title, text]) => <div key={number} className="rounded-xl border border-white/10 bg-slate-950/60 p-4"><span className="font-mono text-xs text-cyan-300">{number}</span><h4 className="mt-3 text-sm font-semibold text-white">{title}</h4><p className="mt-2 text-xs leading-5 text-slate-500">{text}</p></div>)}</div><div className="grid gap-4 md:grid-cols-2"><div className="info-block"><Terminal className="size-5 text-cyan-300" /><h3>Kit de verificación inicial</h3><pre className="mt-4 overflow-x-auto text-xs leading-6 text-cyan-100"><code>{`ip addr show\nip route\nping -c 3 {IP_TARGET}\nnmap -Pn -p 22,80,443 {IP_TARGET}\nnmap -sV --version-light {IP_TARGET}`}</code></pre></div><div className="info-block"><ShieldCheck className="size-5 text-cyan-300" /><h3>Casos de uso por sala</h3><ul className="mt-3 space-y-2 text-sm leading-6 text-slate-400"><li>Reconocimiento: identifica servicios y registra versiones.</li><li>Web: revisa rutas y respuestas sin automatización agresiva.</li><li>Blue team: captura tráfico, crea filtros y explica la evidencia.</li><li>Windows/AD: relaciona usuarios, grupos y privilegios en el dominio de práctica.</li></ul></div></div></div>
+}
+
 function ModulePage({ id }: { id: string }) {
   const data: Record<string, { eyebrow: string; title: string; description: string }> = {
     medusa: { eyebrow: 'MÓDULO 01 · AUDITORÍA DE CREDENCIALES', title: 'Medusa', description: 'Estudia auditorías de autenticación contra servicios remotos en máquinas de práctica. Usa listas pequeñas, límites claros y evidencia documentada.' },
@@ -157,7 +168,7 @@ function ModulePage({ id }: { id: string }) {
     {id === 'sqli' && <SqlLab />}
     {id === 'directory' && <CommandTable id="bloodhound" />}
     {['medusa', 'nse', 'shodan', 'metasploit'].includes(id) && <CommandTable id={id} />}
-    {id === 'flow' && <div className="info-block mt-8"><h3>Ruta recomendada</h3><p>Shodan para reconocimiento pasivo; Nmap, NSE y Zenmap para superficie de ataque; Wireshark/TShark para observar; Medusa para auditoría autorizada; Metasploit para validar en VMs; BloodHound para analizar privilegios.</p></div>}
+    {id === 'flow' && <TryHackMeFlow />}
     {['directory', 'metasploit', 'flow'].includes(id) && <div className="grid gap-4 md:grid-cols-2"><div className="info-block"><Globe2 className="size-5 text-cyan-300" /><h3>Objetivo de la lección</h3><p>Relaciona conceptos, evidencia y controles defensivos en un entorno preparado para clases.</p></div><div className="info-block"><FileCode2 className="size-5 text-cyan-300" /><h3>Entrega sugerida</h3><p>Un informe breve con alcance, método, hallazgos, impacto y recomendación de mitigación.</p></div></div>}
     <div className="mt-8 grid gap-4 md:grid-cols-3"><div className="lesson-step"><span>01</span><p>Fundamentos</p><small>Conceptos y vocabulario</small></div><div className="lesson-step"><span>02</span><p>Práctica</p><small>Datos propios del estudiante</small></div><div className="lesson-step"><span>03</span><p>Informe</p><small>Conclusiones y defensa</small></div></div>
   </>
