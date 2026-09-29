@@ -94,6 +94,9 @@ body { font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSyst
 .case-tab strong { color: #d9e8f4; font-size: 12px; font-weight: 600; white-space: nowrap; }
 .case-tab small { color: #71869d; font-size: 10px; }
 .case-workbench { padding: 24px; border: 1px solid rgba(103,216,231,.2); border-radius: 20px; background: linear-gradient(145deg, rgba(19,42,64,.86), rgba(7,17,31,.9)); box-shadow: 0 20px 46px rgba(0,0,0,.2); }
+.command-editor { width: 100%; min-height: 108px; resize: vertical; padding: 14px 16px; border: 1px solid rgba(84,213,227,.26); border-radius: 12px; outline: none; color: #d7fbff; background: #06101c; font: 13px/1.7 ui-monospace, SFMono-Regular, Menlo, monospace; transition: border-color .2s, box-shadow .2s; }
+.command-editor:focus { border-color: rgba(84,213,227,.75); box-shadow: 0 0 0 3px rgba(84,213,227,.1); }
+.variable-chip { display: inline-flex; align-items: center; padding: 4px 8px; border: 1px solid rgba(157,190,215,.16); border-radius: 999px; color: #8ca8be; background: rgba(157,190,215,.06); font: 11px ui-monospace, SFMono-Regular, Menlo, monospace; }
 .step-progress { height: 4px; flex: 1; min-width: 24px; border-radius: 99px; background: rgba(157,190,215,.14); }
 .step-progress.done { background: #54d5e3; box-shadow: 0 0 12px rgba(84,213,227,.35); }
 .step-panel { padding: 20px; border: 1px solid rgba(157,190,215,.12); border-radius: 15px; background: rgba(3,11,21,.52); }
