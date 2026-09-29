@@ -37,8 +37,10 @@ const modules = [
   { id: 'directory', label: 'BloodHound y AD', icon: Network, tag: '07' },
   { id: 'shodan', label: 'Shodan', icon: Globe2, tag: '08' },
   { id: 'metasploit', label: 'Metasploit', icon: ShieldCheck, tag: '09' },
-  { id: 'flow', label: 'Flujo de pentest', icon: CheckCircle2, tag: '10' },
-  { id: 'cases', label: 'Casos de uso', icon: Play, tag: '11' },
+  { id: 'john', label: 'John the Ripper', icon: KeyRound, tag: '10' },
+  { id: 'redteam', label: 'Red team controlado', icon: AlertTriangle, tag: '11' },
+  { id: 'flow', label: 'Flujo de pentest', icon: CheckCircle2, tag: '12' },
+  { id: 'cases', label: 'Casos de uso', icon: Play, tag: '13' },
 ]
 
 const toolCards = [
@@ -65,6 +67,7 @@ const commandSections: Record<string, [string, string][]> = {
     ['pip install shodan', 'Instala el cliente CLI'], ['shodan init {API_KEY}', 'Configura la API'], ['shodan info', 'Muestra créditos disponibles'], ['shodan count openssh', 'Cuenta resultados'], ['shodan host {IP}', 'Consulta una IP'], ['shodan myip', 'Muestra la IP pública'], ["shodan search 'product:MySQL'", 'Busca por producto'], ['shodan search --fields ip_str,port,org product:mongodb', 'Filtra campos'], ["shodan download resultados 'query'", 'Descarga resultados'], ['shodan parse --fields ip_str,port -f port:2222 archivo.json.gz', 'Filtra resultados descargados'], ['shodan stats --facets country,port nginx', 'Obtiene estadísticas'], ['shodan scan submit {IP}', 'Solicita un escaneo autorizado'], ['shodan scan status {scan_id}', 'Consulta estado'],
   ],
   bloodhound: [['apt install bloodhound', 'Instala la interfaz'], ['neo4j console', 'Levanta Neo4j'], ['bloodhound', 'Abre la GUI'], ['pip3 install bloodhound', 'Instala el ingestor Python'], ['bloodhound-python -u administrator -p {pass} -ns {IP_DC} -d dominio.local -c All', 'Extrae datos del dominio'], ['SharpHound.exe', 'Ingestor para Windows'], ['Invoke-BloodHound -CollectionMethod All', 'Recolecta datos con PowerShell']],
+  john: [['john --list=formats', 'Consulta formatos disponibles antes de analizar un hash'], ['john --status', 'Revisa el estado de una sesión activa'], ['john --show hashes.txt', 'Muestra resultados recuperados del archivo de laboratorio'], ['john --restore', 'Reanuda una sesión interrumpida'], ['john --single --format=raw-sha1 hashes.txt', 'Modo educativo basado en información del usuario'], ['john --wordlist=/usr/share/john/password.lst hashes.txt', 'Prueba una lista controlada contra hashes propios'], ['john --incremental hashes.txt', 'Explora candidatos; úsalo solo con límites del laboratorio'], ['unshadow passwd shadow > crack.txt', 'Prepara hashes de una VM Linux propia'], ['ssh2john id_rsa > crack.txt', 'Convierte una clave de práctica para auditoría'], ['keepass2john vault.kdbx > crack.txt', 'Prepara una bóveda de laboratorio'], ['rar2john archivo.rar > crack.txt', 'Prepara un archivo RAR propio'], ['zip2john archivo.zip > crack.txt', 'Prepara un ZIP propio'], ['7z2john.py archivo.7z > crack.txt', 'Prepara un archivo 7-Zip propio'], ['pdf2john archivo.pdf > crack.txt', 'Prepara un PDF propio'], ['sha256sum crack.txt > crack.txt.sha256', 'Preserva integridad de la evidencia']],
   metasploit: [['search ms08_067', 'Busca un módulo'], ['use windows/smb/ms08_067_netapi', 'Selecciona un módulo'], ['show options', 'Muestra parámetros'], ['set RHOST {IP}', 'Define objetivo'], ['set RHOSTS {rango}', 'Define un rango'], ['set LHOST {IP}', 'Define IP local'], ['set PAYLOAD windows/meterpreter/reverse_tcp', 'Selecciona payload'], ['show payloads', 'Lista payloads'], ['exploit', 'Ejecuta el módulo en una VM'], ['exploit -j', 'Ejecuta como job'], ['db_import escaneo.xml', 'Importa Nmap'], ['db_hosts / db_services', 'Consulta la base de datos'], ['run', 'Ejecuta auxiliares'], ['use auxiliary/scanner/ftp/ftp_version', 'Reconoce FTP'], ['use multi/handler', 'Configura listener'], ['resource autoexploit.rc', 'Automatiza con recursos'], ['getuid', 'Muestra usuario actual'], ['ps', 'Lista procesos'], ['shell', 'Abre shell nativa'], ['background', 'Envía sesión a segundo plano'], ['run checkvm', 'Detecta virtualización'], ['msfvenom --payload {payload} ...', 'Genera payloads para laboratorio'], ['pattern_create.rb {bytes}', 'Genera patrones'], ['pattern_offset.rb {patrón}', 'Calcula offsets']],
 }
 
@@ -195,6 +198,22 @@ function WifiGuide() {
   </div>
 }
 
+function RedTeamGuide() {
+  const phases = [
+    ['01', 'Autorización y reglas', 'Define propietario, fechas, IPs, técnicas permitidas, contactos de emergencia y criterios de parada. Firma el alcance antes de tocar un activo.'],
+    ['02', 'Reconocimiento', 'Construye inventario con fuentes autorizadas, valida que cada IP pertenece al alcance y evita escanear terceros. Guarda timestamps y origen de cada dato.'],
+    ['03', 'Validación mínima', 'Reproduce una sola evidencia en una VM o sala vulnerable. Usa el menor nivel de intrusión, no extraigas datos reales y detente al demostrar el control.'],
+    ['04', 'Detección blue team', 'Correlaciona logs, alertas, tráfico y cambios de configuración. Mide qué vio el SOC, cuánto tardó en responder y qué señal faltó.'],
+    ['05', 'Remediación y retest', 'Entrega impacto, evidencia y corrección. El retest confirma que la vulnerabilidad desapareció sin convertir el informe en una guía de abuso.'],
+  ]
+  return <div className="mt-8 space-y-5"><div className="rounded-2xl border border-rose-400/20 bg-rose-400/[0.06] p-5"><div className="flex items-start gap-3"><AlertTriangle className="mt-1 size-5 shrink-0 text-rose-300" /><div><h3 className="font-semibold text-rose-100">Red team con límites verificables</h3><p className="mt-2 text-sm leading-6 text-rose-100/70">El objetivo es mejorar la detección y la resiliencia, no obtener acceso por obtenerlo. Practica únicamente en TryHackMe, Metasploitable, una VM propia o una autorización escrita. No uses credenciales, payloads, escaneos ni técnicas de evasión contra sistemas reales sin aprobación específica.</p></div></div></div><div className="grid gap-3 md:grid-cols-5">{phases.map(([number, title, text]) => <div key={number} className="rounded-xl border border-white/10 bg-slate-950/60 p-4"><span className="font-mono text-xs text-cyan-300">{number}</span><h4 className="mt-3 text-sm font-semibold text-white">{title}</h4><p className="mt-2 text-xs leading-5 text-slate-500">{text}</p></div>)}</div><div className="grid gap-4 md:grid-cols-2"><div className="info-block"><Terminal className="size-5 text-cyan-300" /><h3>Kit de control y evidencia</h3><pre className="mt-4 overflow-x-auto text-xs leading-6 text-cyan-100"><code>{`export TARGET={IP_AUTORIZADA}
+date -u | tee inicio.txt
+ip route get $TARGET
+nmap -Pn -sV --version-light $TARGET -oA evidencia
+sha256sum evidencia.* > hashes.txt
+script -a terminal-session.log`}</code></pre><p className="mt-3 text-xs leading-5 text-slate-500">Cada ejecución debe ser trazable. Sustituye las variables solo por datos de tu sala.</p></div><div className="info-block"><ShieldCheck className="size-5 text-cyan-300" /><h3>Qué debe observar blue team</h3><ul className="mt-3 flex flex-col gap-2 text-sm leading-6 text-slate-400"><li>Alertas por barrido de puertos y autenticaciones anómalas.</li><li>Eventos de WAF ante entradas de prueba en una app vulnerable.</li><li>Creación de procesos, conexiones salientes y cambios en archivos.</li><li>Tiempo de detección, contención, erradicación y recuperación.</li></ul></div></div><div className="rounded-2xl border border-amber-400/20 bg-amber-400/[0.05] p-5"><h3 className="font-semibold text-amber-100">Consecuencias de usarlo mal</h3><p className="mt-2 text-sm leading-6 text-amber-100/70">Escanear, acceder, interceptar, degradar servicios o extraer información sin autorización puede constituir acceso ilícito, daño informático, interceptación de comunicaciones, tratamiento indebido de datos o incumplimiento contractual. Las consecuencias dependen del país y pueden incluir sanciones laborales, civiles y penales. Consulta la normativa local, las políticas de la escuela y al responsable legal antes de practicar.</p></div></div>
+}
+
 function ModulePage({ id }: { id: string }) {
   const data: Record<string, { eyebrow: string; title: string; description: string }> = {
     medusa: { eyebrow: 'MÓDULO 01 · AUDITORÍA DE CREDENCIALES', title: 'Medusa', description: 'Estudia auditorías de autenticación contra servicios remotos en máquinas de práctica. Usa listas pequeñas, límites claros y evidencia documentada.' },
@@ -206,16 +225,19 @@ function ModulePage({ id }: { id: string }) {
     directory: { eyebrow: 'MÓDULO 07 · IDENTIDAD', title: 'BloodHound y Active Directory', description: 'Mapea relaciones de privilegio en un dominio de práctica para detectar rutas de escalada y oportunidades de hardening.' },
     shodan: { eyebrow: 'MÓDULO 08 · OSINT', title: 'Shodan', description: 'Practica reconocimiento pasivo sobre información indexada y aprende a interpretar banners sin escanear infraestructura ajena.' },
     metasploit: { eyebrow: 'MÓDULO 09 · VALIDACIÓN', title: 'Metasploit con responsabilidad', description: 'Conoce la estructura del framework, sus módulos y la documentación de evidencias. Las pruebas de explotación se reservan para máquinas intencionalmente vulnerables.' },
-    flow: { eyebrow: 'MÓDULO 10 · METODOLOGÍA', title: 'Flujo general de un pentest', description: 'Conecta reconocimiento, análisis, validación y reporte en una metodología repetible para laboratorios escolares.' },
+    john: { eyebrow: 'MÓDULO 10 · AUDITORÍA DE HASHES', title: 'John the Ripper', description: 'Aprende a identificar formatos, preparar hashes de archivos propios y medir la resistencia de contraseñas sin tocar cuentas ni credenciales de terceros.' },
+    redteam: { eyebrow: 'MÓDULO 11 · PURPLE TEAM', title: 'Red team controlado', description: 'Planifica ejercicios autorizados para que blue team pueda detectar, responder y mejorar. Cada fase tiene alcance, evidencia, criterio de parada y retest.' },
+    flow: { eyebrow: 'MÓDULO 12 · METODOLOGÍA', title: 'Flujo general de un pentest', description: 'Conecta reconocimiento, análisis, validación y reporte en una metodología repetible para laboratorios escolares.' },
   }
   const item = data[id] ?? data.nmap
   return <><SectionTitle eyebrow={item.eyebrow} title={item.title} description={item.description} />
     {id === 'nmap' && <Lab type="nmap" />}{id === 'wifi' && <><Lab type="wifi" /><WifiGuide /></>}{id === 'traffic' && <Lab type="traffic" />}
     {id === 'sqli' && <SqlLab />}
     {id === 'directory' && <CommandTable id="bloodhound" />}
-    {['medusa', 'nse', 'shodan', 'metasploit'].includes(id) && <CommandTable id={id} />}
+    {['medusa', 'nse', 'shodan', 'metasploit', 'john'].includes(id) && <CommandTable id={id} />}
+    {id === 'redteam' && <RedTeamGuide />}
     {id === 'flow' && <TryHackMeFlow />}{id === 'cases' && <UseCases />}
-    {['directory', 'metasploit', 'flow'].includes(id) && <div className="grid gap-4 md:grid-cols-2"><div className="info-block"><Globe2 className="size-5 text-cyan-300" /><h3>Objetivo de la lección</h3><p>Relaciona conceptos, evidencia y controles defensivos en un entorno preparado para clases.</p></div><div className="info-block"><FileCode2 className="size-5 text-cyan-300" /><h3>Entrega sugerida</h3><p>Un informe breve con alcance, método, hallazgos, impacto y recomendación de mitigación.</p></div></div>}
+    {['directory', 'metasploit', 'john', 'redteam', 'flow'].includes(id) && <div className="grid gap-4 md:grid-cols-2"><div className="info-block"><Globe2 className="size-5 text-cyan-300" /><h3>Objetivo de la lección</h3><p>Relaciona conceptos, evidencia y controles defensivos en un entorno preparado para clases.</p></div><div className="info-block"><FileCode2 className="size-5 text-cyan-300" /><h3>Entrega sugerida</h3><p>Un informe breve con alcance, método, hallazgos, impacto y recomendación de mitigación.</p></div></div>}
     <div className="mt-8 grid gap-4 md:grid-cols-3"><div className="lesson-step"><span>01</span><p>Fundamentos</p><small>Conceptos y vocabulario</small></div><div className="lesson-step"><span>02</span><p>Práctica</p><small>Datos propios del estudiante</small></div><div className="lesson-step"><span>03</span><p>Informe</p><small>Conclusiones y defensa</small></div></div>
   </>
 }
