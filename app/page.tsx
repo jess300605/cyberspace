@@ -51,7 +51,7 @@ const toolCards = [
 ]
 
 const commands = {
-  nmap: ['nmap -sn {objetivo}', 'nmap -Pn {objetivo}', 'nmap -PR {objetivo}', 'sudo nmap -sS {objetivo}', 'nmap -sT {objetivo}', 'sudo nmap -sU {objetivo}', 'nmap -sN {objetivo}', 'nmap -sF {objetivo}', 'nmap -sX {objetivo}', 'nmap -p {puertos} {objetivo}', 'nmap -p- {objetivo}', 'nmap --top-ports 100 {objetivo}', 'nmap -sV {objetivo}', 'sudo nmap -O {objetivo}', 'sudo nmap -A {objetivo}', 'nmap -sC {objetivo}', 'nmap --script vuln {objetivo}', 'nmap --script smb-vuln-ms17-010 -p445 {objetivo}', 'nmap --script ftp-anon -p21 {objetivo}', 'nmap -oA informe {objetivo}', 'nmap -T4 {objetivo}'],
+  nmap: ['nmap -sn {objetivo}', 'nmap -Pn {objetivo}', 'nmap -PR {objetivo}', 'sudo nmap -sS {objetivo}', 'nmap -sT {objetivo}', 'sudo nmap -sU {objetivo}', 'nmap -sN {objetivo}', 'nmap -sF {objetivo}', 'nmap -sX {objetivo}', 'nmap -p {puertos} {objetivo}', 'nmap -p- {objetivo}', 'nmap --top-ports 100 {objetivo}', 'nmap -sV {objetivo}', 'sudo nmap -O {objetivo}', 'sudo nmap -A {objetivo}', 'nmap -sC {objetivo}', 'nmap --script vuln {objetivo}', 'nmap --script smb-vuln-ms17-010 -p445 {objetivo}', 'nmap --script ftp-anon -p21 {objetivo}', 'nmap -oA informe {objetivo}', 'nmap -T4 {objetivo}', 'zenmap', 'zenmap --target {objetivo}'],
   wifi: ['airmon-ng check kill', 'airmon-ng start {interfaz}', 'iw dev', 'iwconfig', 'airodump-ng {interfaz_monitor}', 'airodump-ng --bssid {BSSID} --channel {canal} --write {captura} {interfaz_monitor}', 'aireplay-ng --deauth 0 -a {BSSID} {interfaz_monitor}', 'aircrack-ng {captura}-01.cap', 'aircrack-ng -w wordlist.txt {captura}-01.cap', 'airmon-ng stop {interfaz_monitor}', 'systemctl restart NetworkManager', 'wireshark {captura}.cap'],
   traffic: ['tshark -D', 'tshark -r {captura}.pcapng -Y "{filtro}"', 'tshark -i3 -w captura.pcapng', 'tshark -i3 -f "tcp port 80" -w web.pcapng', 'tshark -i3 -a duration:60 -w sesion.pcapng', 'tshark -i3 -a files:6 -b duration:30 -w cap.pcapng', 'tshark -qz io,phs', 'tshark -qz hosts', 'tshark -qz conv,tcp', 'tshark -qz expert,warns', 'tshark -r {captura}.pcapng -Y "dns" -T fields -e dns.qry.name', 'dumpcap -D', 'dumpcap -i3 -c {paquetes} -w captura.pcapng'],
 }
@@ -60,6 +60,7 @@ const commandPurpose = (command: string) => {
   const name = command.trim().split(/\s+/)[0]
   const purposes: Record<string, string> = {
     nmap: 'Escanea hosts, puertos o servicios dentro del alcance autorizado.',
+    zenmap: 'Abre la interfaz gráfica de Nmap para crear perfiles, visualizar resultados y guardar sesiones del laboratorio.',
     sudo: 'Ejecuta una revisión que requiere privilegios; úsala solo en tu laboratorio.',
     'airmon-ng': 'Gestiona el modo monitor de una interfaz Wi-Fi propia.',
     'airodump-ng': 'Observa redes y captura evidencia del AP autorizado.',
@@ -150,8 +151,8 @@ function Lab({ type }: { type: 'nmap' | 'wifi' | 'traffic' }) {
         </div>
         <div className="rounded-xl border border-white/10 bg-[#07101e] p-4">
           <div className="mb-3 flex items-center justify-between text-xs text-slate-500"><span className="flex items-center gap-2"><Terminal className="size-4" /> Consola de estudio</span><button className="copy-button" onClick={() => navigator.clipboard?.writeText(generated.join('\n'))}><Clipboard className="size-3" /> Copiar</button></div>
-          <pre className="overflow-x-auto text-sm leading-8 text-cyan-100"><code>{generated.join('\n')}</code></pre>
-          <p className="mt-3 text-xs leading-5 text-slate-500">La consola solo genera ejemplos parametrizados para documentar tu práctica.</p>
+          <pre className="overflow-x-auto text-sm leading-8 text-cyan-100"><code>{generated.map((command) => `${command}  # ${commandPurpose(command)}`).join('\n')}</code></pre>
+          <p className="mt-3 text-xs leading-5 text-slate-500">Cada línea incluye su propósito. La consola solo genera ejemplos parametrizados y no ejecuta comandos reales.</p>
         </div>
       </div>
     </div>
