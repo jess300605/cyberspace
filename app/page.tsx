@@ -151,8 +151,12 @@ function Lab({ type }: { type: 'nmap' | 'wifi' | 'traffic' }) {
         </div>
         <div className="rounded-xl border border-white/10 bg-[#07101e] p-4">
           <div className="mb-3 flex items-center justify-between text-xs text-slate-500"><span className="flex items-center gap-2"><Terminal className="size-4" /> Consola de estudio</span><button className="copy-button" onClick={() => navigator.clipboard?.writeText(generated.join('\n'))}><Clipboard className="size-3" /> Copiar</button></div>
-          <pre className="overflow-x-auto text-sm leading-8 text-cyan-100"><code>{generated.map((command) => `${command}  # ${commandPurpose(command)}`).join('\n')}</code></pre>
-          <p className="mt-3 text-xs leading-5 text-slate-500">Cada línea incluye su propósito. La consola solo genera ejemplos parametrizados y no ejecuta comandos reales.</p>
+          <pre className="overflow-x-auto text-sm leading-8 text-cyan-100"><code>{generated.join('\n')}</code></pre>
+          <p className="mt-3 text-xs leading-5 text-slate-500">La consola solo genera ejemplos parametrizados y no ejecuta comandos reales.</p>
+          <div className="mt-5 border-t border-white/10 pt-4">
+            <div className="flex items-center gap-2"><BookOpen className="size-4 text-cyan-300" /><h4 className="text-sm font-semibold text-white">Biblioteca de comandos</h4></div>
+            <div className="mt-3 space-y-2">{generated.map((command) => <div key={command} className="rounded-lg border border-white/5 bg-white/[0.025] px-3 py-2"><code className="block break-all text-xs text-cyan-100">{command}</code><p className="mt-1 text-xs leading-5 text-slate-400">{commandPurpose(command)}</p></div>)}</div>
+          </div>
         </div>
       </div>
     </div>
