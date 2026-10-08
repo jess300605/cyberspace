@@ -57,7 +57,35 @@ const commands = {
 }
 
 const commandPurpose = (command: string) => {
-  const name = command.trim().split(/\s+/)[0]
+  const normalized = command.trim()
+  const name = normalized.split(/\s+/)[0]
+  const specificPurposes: Array<[string, string]> = [
+    ['nmap -sn', 'Descubrimiento de hosts: identifica qué equipos responden sin hacer detección de servicios.'],
+    ['nmap -Pn', 'Omite el ping previo y trata el objetivo como activo; útil cuando el firewall bloquea ICMP.'],
+    ['nmap -PR', 'Descubre hosts mediante solicitudes ARP en una red Ethernet local.'],
+    ['nmap -sS', 'Realiza un SYN scan para revisar puertos TCP con menor interacción que una conexión completa.'],
+    ['nmap -sT', 'Realiza un TCP connect scan usando la conexión completa del sistema operativo.'],
+    ['nmap -sU', 'Revisa puertos UDP, que suelen requerir más tiempo y pueden producir respuestas ambiguas.'],
+    ['nmap -sN', 'Envía paquetes TCP NULL para estudiar respuestas de filtrado; úsalo solo en laboratorio.'],
+    ['nmap -sF', 'Envía paquetes FIN para observar el comportamiento del filtrado TCP.'],
+    ['nmap -sX', 'Envía paquetes Xmas con varias banderas TCP activas para analizar respuestas del objetivo.'],
+    ['nmap -p-', 'Examina todos los puertos TCP en lugar de limitarse a los puertos comunes.'],
+    ['nmap -p ', 'Examina únicamente los puertos indicados, reduciendo ruido y tiempo de la prueba.'],
+    ['--top-ports', 'Revisa los puertos más frecuentes para obtener una primera visión rápida del servicio expuesto.'],
+    ['nmap -sV', 'Detecta versiones de los servicios que escuchan en los puertos encontrados.'],
+    ['nmap -O', 'Intenta identificar el sistema operativo mediante huellas de red; puede requerir privilegios.'],
+    ['nmap -A', 'Activa varias detecciones avanzadas; genera más tráfico y debe reservarse para un alcance aprobado.'],
+    ['nmap -sC', 'Ejecuta los scripts NSE predeterminados para recopilar información común del servicio.'],
+    ['--script vuln', 'Ejecuta comprobaciones NSE relacionadas con vulnerabilidades conocidas; valida el impacto antes de usarlo.'],
+    ['--script smb-vuln', 'Comprueba una condición SMB específica en el puerto 445 sin explotar el sistema.'],
+    ['--script ftp-anon', 'Verifica si un servidor FTP permite acceso anónimo en el laboratorio.'],
+    ['nmap -oA', 'Guarda resultados en formatos normal, XML y grepable para documentar y correlacionar evidencia.'],
+    ['nmap -T4', 'Aumenta la velocidad del escaneo; úsalo solo cuando el alcance soporte más tráfico.'],
+    ['zenmap --target', 'Abre Zenmap con un objetivo precargado para ejecutar un perfil gráfico autorizado.'],
+    ['zenmap', 'Abre la interfaz gráfica de Nmap para seleccionar perfiles, revisar resultados y guardar la sesión.'],
+  ]
+  const specific = specificPurposes.find(([prefix]) => normalized.startsWith(prefix))
+  if (specific) return specific[1]
   const purposes: Record<string, string> = {
     nmap: 'Escanea hosts, puertos o servicios dentro del alcance autorizado.',
     zenmap: 'Abre la interfaz gráfica de Nmap para crear perfiles, visualizar resultados y guardar sesiones del laboratorio.',
