@@ -175,7 +175,7 @@ function Lab({ type }: { type: 'nmap' | 'wifi' | 'traffic' }) {
       <div className="grid gap-6 p-5 lg:grid-cols-[1fr_1fr]">
         <div className="space-y-4">
           <div className="grid gap-4 sm:grid-cols-2">
-            <label className="field-label">{type === 'nmap' ? 'Objetivo autorizado' : type === 'wifi' ? 'Interfaz Wi‑Fi' : 'Filtro de visualización'}
+            <label className="field-label">{type === 'nmap' ? 'Objetivo autorizado' : type === 'wifi' ? 'Interfaz Wi���Fi' : 'Filtro de visualización'}
               <input className="lab-input" value={field} onChange={(e) => setField(e.target.value)} placeholder="Escribe aquí…" />
             </label>
             {type === 'nmap' && <label className="field-label">Puertos a observar<input className="lab-input" value={ports} onChange={(e) => setPorts(e.target.value)} /></label>}
@@ -185,13 +185,9 @@ function Lab({ type }: { type: 'nmap' | 'wifi' | 'traffic' }) {
           {ran && <div className="flex items-center gap-2 text-sm text-emerald-300"><CheckCircle2 className="size-4" /> Parámetros validados para el laboratorio local.</div>}
         </div>
         <div className="rounded-xl border border-white/10 bg-[#07101e] p-4">
-          <div className="mb-3 flex items-center justify-between text-xs text-slate-500"><span className="flex items-center gap-2"><Terminal className="size-4" /> Consola de estudio</span><button className="copy-button" onClick={() => navigator.clipboard?.writeText(generated.join('\n'))}><Clipboard className="size-3" /> Copiar</button></div>
-          <pre className="overflow-x-auto text-sm leading-8 text-cyan-100"><code>{generated.join('\n')}</code></pre>
-          <p className="mt-3 text-xs leading-5 text-slate-500">La consola solo genera ejemplos parametrizados y no ejecuta comandos reales.</p>
-          <div className="mt-4 border-t border-white/10 pt-4">
-            <div className="flex items-center justify-between gap-3"><div className="flex items-center gap-2"><BookOpen className="size-4 text-cyan-300" /><h4 className="text-sm font-semibold text-white">Biblioteca de comandos</h4></div><span className="text-xs text-slate-500">Copia solo el comando</span></div>
-            <div className="mt-3 grid gap-2 md:grid-cols-2">{generated.map((command) => <div key={command} className="rounded-lg border border-white/5 bg-white/[0.025] p-3"><div className="flex items-start gap-2"><code className="min-w-0 flex-1 break-all text-xs leading-5 text-cyan-100">{command}</code><button type="button" className="copy-button shrink-0" aria-label={`Copiar ${command}`} onClick={() => navigator.clipboard?.writeText(command)}><Clipboard className="size-3" /> Copiar</button></div><p className="mt-2 text-xs leading-5 text-slate-400">{commandPurpose(command)}</p></div>)}</div>
-          </div>
+          <div className="flex items-center justify-between gap-3"><div className="flex items-center gap-2"><BookOpen className="size-4 text-cyan-300" /><h3 className="text-sm font-semibold text-white">Biblioteca de comandos</h3></div><span className="text-xs text-slate-500">Copia individual</span></div>
+          <p className="mt-2 text-xs leading-5 text-slate-500">Cada tarjeta explica el propósito y copia únicamente el comando seleccionado. No se ejecuta nada.</p>
+          <div className="mt-4 grid gap-2">{generated.map((command) => <div key={command} className="rounded-lg border border-white/5 bg-white/[0.025] p-3"><div className="flex items-start gap-2"><code className="min-w-0 flex-1 break-all text-xs leading-5 text-cyan-100">{command}</code><button type="button" className="copy-button shrink-0" aria-label={`Copiar ${command}`} onClick={() => navigator.clipboard?.writeText(command)}><Clipboard className="size-3" /> Copiar</button></div><p className="mt-2 text-xs leading-5 text-slate-400">{commandPurpose(command)}</p></div>)}</div>
         </div>
       </div>
     </div>
